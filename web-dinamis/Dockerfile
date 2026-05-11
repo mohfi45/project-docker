@@ -1,7 +1,7 @@
 # ==========================================
 # STAGE 1: BUILDER (Fase Merakit Aplikasi)
 # ==========================================
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 # 1. Install dependencies (Copy package.json lebih dulu agar proses cache Docker optimal)
@@ -16,7 +16,7 @@ RUN npm run build
 # ==========================================
 # STAGE 2: RUNNER (Fase Server Production)
 # ==========================================
-FROM node:20-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 
 # Set environment ke mode production
