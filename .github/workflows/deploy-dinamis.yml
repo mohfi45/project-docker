@@ -41,7 +41,7 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
-            sudo rm -rf /home/ubuntu/production-monorepo/database/admserver.sql
+            sudo rm -rf /home/ubuntu/production-monorepo/database
 
       - name: Copy Compose file to EC2 via SCP
         uses: appleboy/scp-action@master
