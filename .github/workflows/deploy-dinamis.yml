@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - 'web-dinamis/**'      # Robot HANYA jalan jika folder web-dinamis diubah
-      - 'docker-compose.yml'
+      - 'web-dinamis/docker-compose.yml'
 
 jobs:
   build-dinamis:
@@ -40,8 +40,9 @@ jobs:
           host: ${{ secrets.AWS_HOST }}
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
-          source: "docker-compose.yml"
+          source: "web-dinamis/docker-compose.yml"
           target: "/home/ubuntu/production-monorepo"
+          strip_components: 1
 
       - name: SSH to EC2 and Run Compose
         uses: appleboy/ssh-action@master
