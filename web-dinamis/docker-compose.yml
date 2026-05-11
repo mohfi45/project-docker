@@ -37,10 +37,10 @@ services:
     environment:
       # Variabel ini akan ditangkap oleh file .env di dalam Next.js Bapak
       # Perhatikan: DB_HOST isinya BUKAN localhost atau IP Publik, melainkan NAMA SERVICE DATABASE-nya!
-      DATABASE_HOST: database_kampus
-      DATABASE_USER: usercompro_nim
-      DATABASE_PASSWORD: "12345"
-      DATABASE_NAME: admserver
+      DB_HOST: database_kampus
+      DB_USER: usercompro_nim
+      DB_PASSWORD: "12345"
+      DB_NAME: admserver
     depends_on:
       - database_kampus # Next.js akan menunggu MariaDB menyala lebih dulu sebelum ikut menyala
     restart: always
