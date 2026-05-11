@@ -4,8 +4,8 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'web-dinamis/**'      # Robot HANYA jalan jika folder web-dinamis diubah
-      - 'web-dinamis/docker-compose.yml'
+      - 'web-dinamis/**'
+      - '.github/workflows/deploy-dinamis.yml'
 
 jobs:
   build-dinamis:
