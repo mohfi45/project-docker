@@ -1,16 +1,50 @@
-  services:
-    database_kampus:
-      image: mariadb:lts
-      environment:
-        MARIADB_ROOT_PASSWORD: "PasswordRoot123!"
-        MARIADB_DATABASE: admserver
-        MARIADB_USER: usercompro_nim
-        MARIADB_PASSWORD: "12345"
-      volumes:
-        # 1. Volume untuk menyimpan data permanen (Agar data tidak hilang)
-        - db_data:/var/lib/mysql
-        # 2. THE MAGIC: Menyelipkan file .sql lokal ke folder auto-import Docker!
-        - ./database/admserver.sql:/docker-entrypoint-initdb.d/admserver.sql:ro
+services:
+  # ==========================================
+  # 1. LAYANAN DATABASE (Stateful)
+  # ==========================================
+  database_kampus:
+    image: mariadb:lts
+    environment:
+      MARIADB_ROOT_PASSWORD: "PasswordRoot123!"
+      MARIADB_DATABASE: admserver
+      MARIADB_USER: usercompro_nim
+      MARIADB_PASSWORD: "12345"
+    volumes:
+      # Volume persisten agar data tidak hilang saat kontainer mati
+      - db_data:/var/lib/mysql
+      # Auto-import file SQL dari folder lokal ke dalam kontainer
+      - ./database/admserver.sql:/docker-entrypoint-initdb.d/admserver.sql:ro
+    restart: always
 
-  volumes:
-    db_data: {}
+  # ==========================================
+  # 2. LAYANAN WEB STATIS (Pintu Utama - Port 80)
+  # ==========================================
+  kontainer-statis:
+    # GANTI tulisan [USER_DOCKERHUB] dengan username Docker Hub mahasiswa/Bapak
+    image: mohfi45/web-portal-nim:latest
+    ports:
+      - "80:80"
+    restart: always
+
+  # ==========================================
+  # 3. LAYANAN WEB DINAMIS / NEXT.JS (Pintu Samping - Port 8080)
+  # ==========================================
+  kontainer-dinamis:
+    # GANTI tulisan [USER_DOCKERHUB] dengan username Docker Hub mahasiswa/Bapak
+    image: mohfi45/web-dinamis:latest
+    ports:
+      - "8080:3000"
+    environment:
+      # Variabel ini akan ditangkap oleh file .env di dalam Next.js Bapak
+      # Perhatikan: DB_HOST isinya BUKAN localhost atau IP Publik, melainkan NAMA SERVICE DATABASE-nya!
+      DATABASE_HOST: database_kampus
+      DATABASE_USER: usercompro_nim
+      DATABASE_PASSWORD: "12345"
+      DATABASE_NAME: admserver
+    depends_on:
+      - database_kampus # Next.js akan menunggu MariaDB menyala lebih dulu sebelum ikut menyala
+    restart: always
+
+# Mendefinisikan volume global
+volumes:
+  db_data: {}
