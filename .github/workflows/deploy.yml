@@ -1,0 +1,46 @@
+name: Full CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # TUGAS 1: MERAKIT & MENGIRIM KE GUDANG (CI)
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          # Ganti "username_dockerhub" dengan milik Anda!
+          tags: mohfi45/web-portal-nim:latest
+
+  # TUGAS 2: MENYURUH AWS MENGAMBIL BARANG (CD)
+  deploy-to-ec2:
+    needs: build-and-push # AWS menunggu Tugas 1 selesai dulu
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH to EC2 and Run Docker
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ${{ secrets.AWS_USERNAME }}
+          key: ${{ secrets.AWS_PRIVATE_KEY }}
+          script: |
+            # Hapus kontainer lama jika ada
+            docker rm -f portal-app || true
+            # Tarik Image BARU dari Docker Hub (Ganti username_dockerhub!)
+            docker pull mohfi45/web-portal-nim:latest
+            # Jalankan Image di Port 80
+            docker run -d -p 80:80 --name portal-app mohfi45/web-portal-nim:latest
