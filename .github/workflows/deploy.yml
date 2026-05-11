@@ -44,3 +44,5 @@ jobs:
             docker pull mohfi45/web-portal-nim:latest
             # Jalankan Image di Port 80
             docker run -d -p 80:80 --name portal-app mohfi45/web-portal-nim:latest
+            # jalan otomatis setelah instance mati atau restart
+            docker update --restart=always portal-app

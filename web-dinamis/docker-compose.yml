@@ -1,0 +1,16 @@
+  services:
+    database_kampus:
+      image: mariadb:lts
+      environment:
+        MARIADB_ROOT_PASSWORD: "PasswordRoot123!"
+        MARIADB_DATABASE: admserver
+        MARIADB_USER: usercompro_nim
+        MARIADB_PASSWORD: "12345"
+      volumes:
+        # 1. Volume untuk menyimpan data permanen (Agar data tidak hilang)
+        - db_data:/var/lib/mysql
+        # 2. THE MAGIC: Menyelipkan file .sql lokal ke folder auto-import Docker!
+        - ./database/admserver.sql:/docker-entrypoint-initdb.d/admserver.sql:ro
+
+  volumes:
+    db_data: {}
