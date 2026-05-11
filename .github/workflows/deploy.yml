@@ -3,6 +3,9 @@ name: Full CI/CD Pipeline
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'Web Statis/**'
+      - '.github/workflows/deploy.yml'
 
 jobs:
   # TUGAS 1: MERAKIT & MENGIRIM KE GUDANG (CI)

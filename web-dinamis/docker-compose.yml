@@ -11,7 +11,7 @@ services:
       MARIADB_PASSWORD: "12345"
     volumes:
       # Volume persisten agar data tidak hilang saat kontainer mati
-      - db_data:/var/lib/mysql
+      - db_data_v2:/var/lib/mysql
       # Auto-import file SQL dari folder lokal ke dalam kontainer
       - ./database/admserver.sql:/docker-entrypoint-initdb.d/admserver.sql:ro
     restart: always
@@ -47,4 +47,4 @@ services:
 
 # Mendefinisikan volume global
 volumes:
-  db_data: {}
+  db_data_v2: {}

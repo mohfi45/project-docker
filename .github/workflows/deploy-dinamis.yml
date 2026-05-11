@@ -40,7 +40,7 @@ jobs:
           host: ${{ secrets.AWS_HOST }}
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
-          source: "web-dinamis/docker-compose.yml"
+          source: "web-dinamis/docker-compose.yml,web-dinamis/database/admserver.sql"
           target: "/home/ubuntu/production-monorepo"
           strip_components: 1
 
